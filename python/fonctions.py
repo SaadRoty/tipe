@@ -47,6 +47,7 @@ def ExtraireArr(doc): #donne la 3Liste des 2Listes des frontières des arrondiss
                         for d in route[param][c]:
                             if d == "coordinates":
                                 crd.append(route[param][c][d][0])
+                                break
     return crd
 
 def ExtraireArrTri(doc): # donne la 4Liste des 3Listes(composees d'une seule 2Liste mais pour faire marcher GraphRte avec [n°Arr (-1)]) des frontières de chaque arrondissement
@@ -70,9 +71,9 @@ def GraphRte(crd): #prend en charge une 3Liste et trace les troncons de chaque 2
     for trc in crd:
         X=[]
         Y=[]
-        for point in trc:
-            X.append(point[0])
-            Y.append(point[1])
+        for pt in trc:
+            X.append(pt[0])
+            Y.append(pt[1])
         plt.plot(X,Y)
 
     plt.title("Cartographie des voies de Paris par tronçons")
@@ -85,12 +86,12 @@ def GraphRtePlan(crd): # plan de Paris en arrière plan de GraphRte
     for trc in crd:
         X=[]
         Y=[]
-        for point in trc:
-            X.append(point[0])
-            Y.append(point[1])
+        for pt in trc:
+            X.append(pt[0])
+            Y.append(pt[1])
         plt.plot(X,Y)
 
-    img = plt.imread("carteParis.jpg")
+    img = plt.imread("../assets/pictures/carteParis.jpg")
     plt.imshow(img, extent=[2.2205, 2.471, 48.804, 48.905])
 
     plt.title("Cartographie des voies de Paris par tronçons")
@@ -98,16 +99,7 @@ def GraphRtePlan(crd): # plan de Paris en arrière plan de GraphRte
     plt.ylabel("Latitude (°)")
     plt.show()
 
-"""Liste=ExtraireArrTri(doc)
-
-def PointInArr(pt,Liste): # recherche l'arrondissement dans lequel le point d'un trc se trouve
-
-    
-def TriRteArr(crd): #prends en charge une troisListe et renvoie quatreListe des troisListe des deuxListes des trcs tries par arrondissements
-
-    Rep=[[]for i in range(20)]"""
-
-def PointExtrem(crd): #prend en argument une 4Liste et renvoie la 2Liste des Listes composees des 4 crd extremes des points classees par arrondissement
+def PtExtrem(crd): #prend en argument une 4Liste et renvoie la 2Liste des Listes composees des 4 crd extremes des pts classees par arrondissement
 
     Rep = []
 
@@ -133,18 +125,61 @@ def PointExtrem(crd): #prend en argument une 4Liste et renvoie la 2Liste des Lis
         Rep.append([N,S,E,W])
     return Rep
 
-def TriRteArr(crd):
-    L=PointExtrem(ExtraireArrTri("arrondissements.json"))
+def TriRteArr(crd): # prend en arg une 3Liste renvoie une 4liste composée de 3Listes contenant les 2listes des trc tries par Arr
+    L=PtExtrem(ExtraireArrTri("../assets/json/arrondissements.json"))
 
     Rep=[[]for i in range(20)]
-    Test=[]
+
+    verif=0
     for trc in crd:
+        verif=+1
         for Arr in range(20):
             if trc[0][1]<=L[Arr][0] and trc[0][1]>=L[Arr][1] and trc[0][0]<=L[Arr][2] and trc[0][0]>=L[Arr][3] :
                 Rep[Arr].append(trc)
-                Test.append(trc)
+                verif-=1
+                break
 
-    return Rep,Test
+    return Rep,("nb de trc abs = ",verif)
+
+def GraphArr(crd):
+    color=["b","g","r","c","m","y","k"]
+    for Arr in range(20):
+        for trc in crd[Arr]:
+            X = []
+            Y = []
+            for pt in trc:
+                X.append(pt[0])
+                Y.append(pt[1])
+            plt.plot(X,Y,color[Arr%7])
+
+    img = plt.imread("../assets/pictures/carteParis.jpg")
+    plt.imshow(img, extent=[2.2205, 2.471, 48.804, 48.905])
+
+    plt.title("Cartographie des voies de Paris par tronçons")
+    plt.xlabel("Longitude (°)")
+    plt.ylabel("Latitude (°)")
+    plt.show()
+
+def GraphArrBeau(crd):
+    color=["b","g","r","c","g","m","y","k","m","k","m","b","r","c","b","r","c","y","c","g"]
+    for Arr in range(20):
+        for trc in crd[Arr]:
+            X = []
+            Y = []
+            for pt in trc:
+                X.append(pt[0])
+                Y.append(pt[1])
+            plt.plot(X,Y,color[Arr])
+
+    img = plt.imread("../assets/pictures/carteParis.jpg")
+    plt.imshow(img, extent=[2.2205, 2.471, 48.804, 48.905])
+
+    plt.title("Cartographie des voies de Paris par tronçons")
+    plt.xlabel("Longitude (°)")
+    plt.ylabel("Latitude (°)")
+    plt.show()
+
+
 
 
 
