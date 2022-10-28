@@ -179,6 +179,34 @@ def GraphArrBeau(crd):
     plt.ylabel("Latitude (°)")
     plt.show()
 
+def TrigArr(crd): #crd est une 2liste
+    Rep=[]
+    Li=crd.copy()
+    Li.pop(0)
+    pt=-2
+    n=len(Li)
+    while n>3:
+        vect1=[Li[pt][0]-Li[pt-1][0],Li[pt][1]-Li[pt-1][1]]
+        vect2=[Li[pt+1][0]-Li[pt][0],Li[pt+1][1]-Li[pt][1]]
+        if np.cross(vect1,vect2)<=0:
+            print([Li[pt-1],Li[pt],crd[pt+1]])
+            Rep.append([Li[pt-1],Li.pop(pt),Li[pt+1],Li[pt-1]])
+            n=n-1
+            pt=-2
+            print(len(Li))
+        else:
+            pt+=1
+            print(pt,n)
+
+    return Rep
+
+
+
+
+
+
+
+
 
 
 
