@@ -80,8 +80,8 @@ def G_Aff_Poubelle(crd,titre): # affiche en rouge les Trc nécessitant une colle
         for pt in range(len(trc)-1):
             poubelle = rd.randint(0,4)
             if poubelle==4:
-                X=[trc[pt][0],(trc[pt][0]+trc[pt+1][0])/2,trc[pt+1][0]]
-                Y=[trc[pt][1],(trc[pt][1]+trc[pt+1][1])/2,trc[pt+1][1]]
+                X=[trc[pt][0],trc[pt+1][0]]
+                Y=[trc[pt][1],trc[pt+1][1]]
                 plt.plot(X,Y,'r')
             else:
                 X = [trc[pt][0],trc[pt + 1][0]]
@@ -92,4 +92,7 @@ def G_Aff_Poubelle(crd,titre): # affiche en rouge les Trc nécessitant une colle
     plt.xlabel("Longitude (°)")
     plt.ylabel("Latitude (°)")
     plt.show()
+
+#def G_Rte_Est_In(crd,titre):
+
 

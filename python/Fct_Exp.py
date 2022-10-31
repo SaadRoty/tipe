@@ -60,3 +60,70 @@ def Trig_Arr(crd): # 2L-->
     Rep.append([Li[0], Li[1], Li[2], Li[0]])
     return [Rep[0]]
 
+def Est_In(Pt,Arr): # 1L(Pt) et 2L(Arr) > 1L(Pt) --> Bool
+    x, y = Pt[0], Pt[1]
+    if Pt in Arr:
+        return True
+    """for i in range(len(Arr)-1):
+        x1, x2 = Arr[i][0], Arr[i + 1][0]
+        y1, y2 = Arr[i][1], Arr[i + 1][1]
+
+        if x2 < x1:
+            x1, x2 = x2, x1
+            y1, y2 = y2, y1
+        if x>x1 and x<x2:
+            if (y-y1)/(x-x1)==((y2-y)/(x2-x)):
+                return True"""
+    cp=0
+    x,y=Pt[0],Pt[1]
+    for i in range(len(Arr)-1):
+        x1,x2=Arr[i][0],Arr[i+1][0]
+        y1,y2=Arr[i][1],Arr[i+1][1]
+
+        if x2<x1:
+            x1,x2=x2,x1
+            y1,y2=y2,y1
+
+        if (x2 < x) or (y2 < y if y1 < y else y2 > y):
+            continue
+        if x1==x2:
+            return True
+
+        if y1==y2 and x1<x:
+            return True
+
+        if x1 > x:
+            cp += 1
+            continue
+
+        a = (y2 - y1) / (x2 - x1)
+        b = y1 - a * x1
+        Y = (y2 - y1)/(x2 - x1)*(x-x1)+y1
+
+        if (Y < y if a < 0 else Y > y):
+            continue
+        cp += 1
+    """if cp>=7:
+        print(cp,i)"""
+    if cp%2==0:
+        return False
+    return True
+
+def Tri_Est_In(crd,Arr): # 3L(Paris) > 2L(Trc) > 1L(Pt) et 3L(ArrS) > 2L (Arr) > 1L(Pt) --> 4L(Paris) > 3L(Arr) > 2L(Trc) > 1L(Pt)
+    N=0
+    M=0
+    Rep=[[]for i in range(20)]
+    abs=[]
+    for Trc in crd:
+        verif=0
+        for i in range(20):
+            if Est_In(Trc[0],Arr[i]):
+                Rep[i].append(Trc)
+                N+=1
+                verif=1
+                break
+        if verif == 0:
+            M+=1
+            abs.append(Trc)
+    return Rep,(N,M),abs
+
