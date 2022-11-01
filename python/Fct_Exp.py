@@ -205,5 +205,54 @@ def Trc_Associe_Vois(Voisinage,TrcRenom,TrcTri): #2L(Voisin) et 2L(TrcRenom) -->
 
     return Rep
 
+def Plus_Proche_Vois(A,Vois,Dist): # Pt de départ et Listes des Voisins ainsi que des Dist aux Voisins dans Arr --> Voisin le plus proche
+    indx = 0
+    dist=Dist[A][indx]
+    for i in range(1,len(Dist[A])):
+        if Dist[A][i]<dist:
+            indx=i
+            dist = Dist[A][indx]
+    return Vois[A][indx]
+
+def Dist_Chemin_Graph(Chmt,Vois,Dist): # Liste des Pt visités et liste des Dist aux Voisins dans Arr --> Distance Totale
+    distT=0
+    for Pt in range(len(Chmt)-1):
+        indx=Vois[Chmt[Pt]].index(Chmt[Pt+1])
+        distT+=Dist[Chmt[Pt]][indx]
+    return distT
+
+def Dijkstra(A,B,Vois,Dist): # pas finalisée, utilisiation d'un autre algorithme plus rapide
+    if B in Vois[A]:
+        return [A,B]
+    V=Vois.copy()
+    D=Dist.copy()
+    Chemin=[A]
+    DistT=0
+    prev=A
+    next=A
+
+    while B not in Vois[next]:
+        prev = next
+        next = Plus_Proche_Vois(prev,V,D)
+
+        print(V[prev])
+        print(next)
+        indx=V[prev].index(next)
+        del(V[prev][indx])
+        print
+        del(D[prev][indx])
+
+    return V
+
+def Mat_Adj(Vois,Dist):
+    Mat=np.zeros([len(Vois),len(Vois)])
+    for i in range (len(Vois)):
+        for j in range(len(Vois[i])):
+            Mat[i][Vois[i][j]]=Dist[i][j]
+    return Mat
+
+#def Dijkstra_Mat_Adj():
+
+
 
 

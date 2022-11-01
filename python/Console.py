@@ -21,6 +21,10 @@ from Fct_Exp import Renom_Pt_Extr_Trc
 from Fct_Exp import Trouv_Vois
 from Fct_Exp import Div_Li_Vois
 from Fct_Exp import Trc_Associe_Vois
+from Fct_Exp import Plus_Proche_Vois
+from Fct_Exp import Dist_Chemin_Graph
+from Fct_Exp import Dijkstra
+from Fct_Exp import Mat_Adj
 
 #Fct_Graph
 from Fct_Graph import G_Rte
@@ -28,6 +32,9 @@ from Fct_Graph import G_Rte_Carte
 from Fct_Graph import G_Rte_Arr
 from Fct_Graph import G_Rte_Arr_Beau
 from Fct_Graph import G_Aff_Poubelle
+
+#Algo_Dijkstra
+from Algo_Dijkstra import dijkstra
 
 
 
@@ -43,8 +50,13 @@ with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
 
 Vois,Dist,TrcAss=data[0],data[1],data[2]
 
-print(Vois)
+"""print(Vois)
 print('haha')
 print(Dist)
 print("haha")
 print(TrcAss)
+print(Hoho)"""
+
+print(Mat_Adj(Vois,Dist))
+
+print(dijkstra(len(Vois),Mat_Adj(Vois,Dist),0))

@@ -1,5 +1,6 @@
 #Jawg.Terrain
 #polyligne
+#matrice d'adjacence
 import json
 import numpy as np
 import matplotlib.pyplot as plt
@@ -60,7 +61,10 @@ import xyzservices.providers as xyz
     Ecrire_Json(Tri_Est_In(crd,Arr,data)[-1],"../assets/output/json/Dist_Trc_Tri_Arr.json")
 
 #Titres des graphiques
-T1=["Cartographie des voies de Paris par tronçons","Cartographie des arrondissements de Paris","Cartographie des voies de Paris triées par arrondissement selon la methode des Crd_Extr","Cartographie des voies de Paris nécessitant une collecte des déchets","Cartographie des voies du 1er arrondissement nécessitant une collecte des déchets"]
+T1=["Cartographie des voies de Paris par tronçons","Cartographie des arrondissements de Paris",
+    "Cartographie des voies de Paris triées par arrondissement selon la methode des Crd_Extr",
+    "Cartographie des voies de Paris nécessitant une collecte des déchets",
+    "Cartographie des voies du 1er arrondissement nécessitant une collecte des déchets"]
 T2=["frontière du 1er arrondissement de Paris"]
 
 # Creation des 3 Listes associées au voisinages des point dont l'indice corespond a celui de la liste contenant respectivement Les voisins des points, les distances avec ces voisins, les troncons associé pour aller à ce voisin
@@ -106,3 +110,7 @@ print('HAHA')
     Ecrire_Json(Li,"../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json")
 
 #
+with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
+   data= json.load(f)
+
+Vois,Dist,TrcAss=data[0],data[1],data[2]
