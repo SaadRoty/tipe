@@ -93,6 +93,5 @@ def G_Aff_Poubelle(crd,titre): # affiche en rouge les Trc nécessitant une colle
     plt.ylabel("Latitude (°)")
     plt.show()
 
-#def G_Rte_Est_In(crd,titre):
 
 

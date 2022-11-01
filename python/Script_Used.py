@@ -23,60 +23,86 @@ import xyzservices.providers as xyz
         Li.append([T[i],D[i]])
     Ecrire_Json(Li,"../assets/output/json/Trc_et_dist_Paris.json")
 2)Trc_Paris.json
-T=Ext_Rte("../assets/input/json/troncon_voie.json")[0]
-Ecrire_Json(T, "../assets/output/json/Trc_Paris.json")
+    T=Ext_Rte("../assets/input/json/troncon_voie.json")[0]
+    Ecrire_Json(T, "../assets/output/json/Trc_Paris.json")
 3)Arr_Paris.json
     Ecrire_Json(ExtraireArrTri("../assets/input/json/arrondissements.json"),"../assets/output/json/Arr_Paris.json")
 4)Pt_Extr.json
     with open("../assets/output/json/Arr_Paris.json") as f:
         data = json.load(f)
-    Ecrire_Json(PtEx(data),"../assets/output/json/Pt_Extr.json")
+    Ecrire_Json(PtEx(data), "../assets/output/json/Pt_Extr.json")
+
+5)Trc_Paris_Tri_Meth_Est_In.json
+    with open("../assets/output/json/Trc_Paris.json") as f1:
+        crd = json.load(f1)
+
+    with open("../assets/output/json/Arr_Paris.json") as f2:
+        Arr = json.load(f2)
+    print(len(crd))
+    print(Tri_Est_In(crd,Arr)[1])
+
+    Ecrire_Json(Tri_Est_In(crd,Arr)[0],"../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json")
+
+6)Dist_Trc_Paris.json
+    D = Ext_Rte("../assets/input/json/troncon_voie.json")[1]
+    Ecrire_Json(D, "../assets/output/json/Dist_Trc_Paris.json")
+
+7)Dist_Trc_Tri_Arr.json
+    with open("../assets/output/json/Dist_Trc_Paris.json") as f:
+       data = json.load(f)
+    with open("../assets/output/json/Trc_Paris.json") as f1:
+       crd = json.load(f1)
+
+    with open("../assets/output/json/Arr_Paris.json") as f2:
+       Arr = json.load(f2)
+
+    print(Tri_Est_In(crd,Arr,data)[-1])
+    Ecrire_Json(Tri_Est_In(crd,Arr,data)[-1],"../assets/output/json/Dist_Trc_Tri_Arr.json")
 
 #Titres des graphiques
 T1=["Cartographie des voies de Paris par tronçons","Cartographie des arrondissements de Paris","Cartographie des voies de Paris triées par arrondissement selon la methode des Crd_Extr","Cartographie des voies de Paris nécessitant une collecte des déchets","Cartographie des voies du 1er arrondissement nécessitant une collecte des déchets"]
 T2=["frontière du 1er arrondissement de Paris"]
 
-"""
-poly=[(0,2),(1,1),(3,1),(1,-1),(0,-2),(-1,-1),(-1,1)]
-triangles= tripy.earclip(poly)
+# Creation des 3 Listes associées au voisinages des point dont l'indice corespond a celui de la liste contenant respectivement Les voisins des points, les distances avec ces voisins, les troncons associé pour aller à ce voisin
 
-print(triangles)
+with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
+   data= json.load(f)
 
-A=[]
-for i in range(len(triangles)) :
-    A.append([[triangles[i][0][0],triangles[i][0][1]],[triangles[i][1][0],triangles[i][1][1]],[triangles[i][2][0],triangles[i][2][1]],[triangles[i][0][0],triangles[i][0][1]]])
+crd,NumPt=Renom_Pt_Extr_Trc(data[0])
 
-print(A)
+with open("../assets/output/json/Dist_Trc_Tri_Arr.json") as f2:
+   dist = json.load(f2)
 
-G_Rte(A,"a")
+with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
+   TrcTri=json.load(f3)
+print(Trouv_Vois(crd,NumPt,dist[0]))
+print('HAHA')
 
-with open("../assets/output/json/Arr_Paris.json") as f:
-    data = json.load(f)
-triangles= tripy.earclip(data[11])
+print(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0])
+print('HAHA')
 
-print(triangles)
+print(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[1])
+print('HAHA')
 
-A=[]
-for i in range(len(triangles)) :
-    A.append([[triangles[i][0][0],triangles[i][0][1]],[triangles[i][1][0],triangles[i][1][1]],[triangles[i][2][0],triangles[i][2][1]],[triangles[i][0][0],triangles[i][0][1]]])
+print(TrcTri[0])
+print('HAHA')
 
-print(A)
-G_Rte(A,"a")
-"""
-if (x2 < x and x < x1) or (y2 < y if y1 < y else y2 > y):
-    continue
-if y1 == y or y2 == y:
-    continue
+print(Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0],crd,TrcTri[0]))
+print('HAHA')
 
-if x1 > x and x2 > x:
-    cp += 1
-    continue
+8)3L_Voisins_Dist_Trc_1erArr.json
+    with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
+       data= json.load(f)
 
-a = (y2 - y1) / (x2 - x1)
-b = y1 - a * x1
-Y = a * x + b
+    crd,NumPt=Renom_Pt_Extr_Trc(data[0])
 
-if (Y < y if a < 0 else Y > y):
-    continue
+    with open("../assets/output/json/Dist_Trc_Tri_Arr.json") as f2:
+       dist = json.load(f2)
 
-cp += 1
+    with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
+        TrcTri=json.load(f3)
+
+    Li=[Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0] , Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[1] , Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0],crd,TrcTri[0])]
+    Ecrire_Json(Li,"../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json")
+
+#

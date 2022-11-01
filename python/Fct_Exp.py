@@ -38,7 +38,7 @@ def Tri_Rte_Arr_PtEx(doc_Rte,doc_Crd_Extr): # 1er Pt de chaque Trc dans ?Arr? se
                 break
     return Rep
 
-def Trig_Arr(crd): # 2L-->
+def Trig_Arr(crd): # 2L(Fr_Arr) --> Non utilisée (methode pas finalisée)
     Rep=[]
     Li=crd.copy()
     Li.pop(0)
@@ -86,10 +86,7 @@ def Est_In(Pt,Arr): # 1L(Pt) et 2L(Arr) > 1L(Pt) --> Bool
 
         if (x2 < x) or (y2 < y if y1 < y else y2 > y):
             continue
-        if x1==x2:
-            return True
-
-        if y1==y2 and x1<x:
+        if (x1==x2) or (y1==y2 and x1<x):
             return True
 
         if x1 > x:
@@ -103,27 +100,110 @@ def Est_In(Pt,Arr): # 1L(Pt) et 2L(Arr) > 1L(Pt) --> Bool
         if (Y < y if a < 0 else Y > y):
             continue
         cp += 1
-    """if cp>=7:
-        print(cp,i)"""
     if cp%2==0:
         return False
     return True
 
-def Tri_Est_In(crd,Arr): # 3L(Paris) > 2L(Trc) > 1L(Pt) et 3L(ArrS) > 2L (Arr) > 1L(Pt) --> 4L(Paris) > 3L(Arr) > 2L(Trc) > 1L(Pt)
-    N=0
-    M=0
+def Tri_Est_In(crd,Arr,dist): # 3L(Paris) > 2L(Trc) > 1L(Pt) et 3L(ArrS) et 1L(Paris) > (dist) > 2L (Arr) > 1L(Pt) --> 4L(Paris) > 3L(Arr) > 2L(Trc) > 1L(Pt)
+    N,M=0,0
     Rep=[[]for i in range(20)]
     abs=[]
+    Dist=[[]for i in range(20)]
+
+    j=-1
     for Trc in crd:
+        j+=1
         verif=0
-        for i in range(20):
-            if Est_In(Trc[0],Arr[i]):
-                Rep[i].append(Trc)
-                N+=1
-                verif=1
-                break
-        if verif == 0:
+        cp=0
+        while verif == 0 and cp<len(Trc):
+            for i in range(20):
+                if Est_In(Trc[cp],Arr[i]):
+                    Rep[i].append(Trc)
+                    Dist[i].append(dist[j])
+                    N+=1
+                    verif=1
+                    break
+            cp+=1
+        if verif==0:
             M+=1
             abs.append(Trc)
-    return Rep,(N,M),abs
+    return Rep,(N,M),abs, Dist
+
+def Renom_Pt_Extr_Trc(crd): # 3L(Arr) > 2L(Trc) > 1L(Pt) --> 2L(Arr) > 1L(Trc) : [Num(Start),Num(End)] et NumPt
+    Rep=[[0,0]for i in range(len(crd))]
+    Rep[0][1]=1
+    NumPt = 2
+    for Trc in range(1,len(crd)):
+        St,End=0,0
+        for j in range(Trc):
+
+            if St == 0:
+                if crd[Trc][0] == crd[j][0]:
+                    Rep[Trc][0] = Rep[j][0]
+                    St = 1
+                elif crd[Trc][0] == crd[j][-1]:
+                    Rep[Trc][0] = Rep[j][-1]
+                    St = 1
+
+            if End == 0:
+                if crd[Trc][-1] == crd[j][0]:
+                    Rep[Trc][-1] = Rep[j][0]
+                    End = 1
+                elif crd[Trc][-1] == crd[j][-1]:
+                    Rep[Trc][-1] = Rep[j][-1]
+                    End = 1
+
+        if St==0:
+            Rep[Trc][0] = NumPt
+            NumPt += 1
+        if End==0:
+            Rep[Trc][-1] = NumPt
+            NumPt += 1
+    return Rep,NumPt
+
+def Trouv_Vois(crd,NumPt,dist): # 2L(Arr) > 1L(Trc) et 1L(dist) : (Num(Start),Num(End)) et 1L(Dist_Trc) --> 2*3L(Arr) > 1*2L : [Pt,[Voisin1,dist],[Voisin2,dist],...]
+    
+    Rep=[[Pt]for Pt in range(NumPt)]
+
+    for Pt in range(NumPt):
+        for Trc in range(len(crd)):
+            if crd[Trc][0]==Pt:
+                Rep[Pt].append([crd[Trc][-1],dist[Trc]])
+            if crd[Trc][-1]==Pt:
+                Rep[Pt].append([crd[Trc][0],dist[Trc]])
+
+    for Pt in Rep:
+        for Vois in range(1,len(Pt)):
+            N=Vois
+            while N>1 and Pt[N][0]<Pt[N-1][0]:
+                Pt[N],Pt[N - 1] = Pt[N-1],Pt[N]
+                N=N-1
+    return Rep
+
+def Div_Li_Vois(Li): # 2*3L(Arr) > 1*2L : [Pt,[Voisin1,dist],[Voisin2,dist],...] --) 2L(Voisin) et 2L(distance] pour les pt d'indice croissant correspondant a l'indice dans la liste
+    Voisinage=[[] for i in range(len(Li))]
+    Distance=[[] for i in range(len(Li))]
+    for i in range(len(Li)):
+        for j in range(1,len(Li[i])):
+            Voisinage[i].append(Li[i][j][0])
+            Distance[i].append(Li[i][j][1])
+    return Voisinage,Distance
+
+def Trc_Associe_Vois(Voisinage,TrcRenom,TrcTri): #2L(Voisin) et 2L(TrcRenom) --> 4L(Voisinage) > 3L(Voisins) > 2L(TrcAsso) > 1L(Pt)
+    Rep=[[]for Vois in range(len(Voisinage))]
+
+    for Vois in range(len(Voisinage)):
+        for NumVois in range(len(Voisinage[Vois])):
+
+            if [Vois,Voisinage[Vois][NumVois]] in TrcRenom:
+
+                indx = TrcRenom.index([Vois,Voisinage[Vois][NumVois]])
+            else:
+                indx = TrcRenom.index([Voisinage[Vois][NumVois],Vois])
+
+            Rep[Vois].append(TrcTri[indx])
+
+    return Rep
+
+
 
