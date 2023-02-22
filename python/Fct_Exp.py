@@ -133,10 +133,11 @@ def Renom_Pt_Extr_Trc(crd): # 3L(Arr) > 2L(Trc) > 1L(Pt) --> 2L(Arr) > 1L(Trc) :
     Rep=[[0,0]for i in range(len(crd))]
     Rep[0][1]=1
     NumPt = 2
+    EquivalentCrd=[crd[0][0],crd[0][-1]]
+
     for Trc in range(1,len(crd)):
         St,End=0,0
         for j in range(Trc):
-
             if St == 0:
                 if crd[Trc][0] == crd[j][0]:
                     Rep[Trc][0] = Rep[j][0]
@@ -156,10 +157,12 @@ def Renom_Pt_Extr_Trc(crd): # 3L(Arr) > 2L(Trc) > 1L(Pt) --> 2L(Arr) > 1L(Trc) :
         if St==0:
             Rep[Trc][0] = NumPt
             NumPt += 1
+            EquivalentCrd.append(crd[Trc][0])
         if End==0:
             Rep[Trc][-1] = NumPt
             NumPt += 1
-    return Rep,NumPt
+            EquivalentCrd.append(crd[Trc][-1])
+    return Rep,NumPt,EquivalentCrd
 
 def Trouv_Vois(crd,NumPt,dist): # 2L(Arr) > 1L(Trc) et 1L(dist) : (Num(Start),Num(End)) et 1L(Dist_Trc) --> 2*3L(Arr) > 1*2L : [Pt,[Voisin1,dist],[Voisin2,dist],...]
     
@@ -180,7 +183,8 @@ def Trouv_Vois(crd,NumPt,dist): # 2L(Arr) > 1L(Trc) et 1L(dist) : (Num(Start),Nu
                 N=N-1
     return Rep
 
-def Div_Li_Vois(Li): # 2*3L(Arr) > 1*2L : [Pt,[Voisin1,dist],[Voisin2,dist],...] --) 2L(Voisin) et 2L(distance] pour les pt d'indice croissant correspondant a l'indice dans la liste
+def Div_Li_Vois(Li): # 2*3L(Arr) > 1*2L : [Pt,[Voisin1,dist],[Voisin2,dist],...] --) 2L(Voisin) et 2L(distance]
+                     # pour les pt d'indice croissant correspondant a l'indice dans la liste
     Voisinage=[[] for i in range(len(Li))]
     Distance=[[] for i in range(len(Li))]
     for i in range(len(Li)):
@@ -204,6 +208,9 @@ def Trc_Associe_Vois(Voisinage,TrcRenom,TrcTri): #2L(Voisin) et 2L(TrcRenom) -->
             Rep[Vois].append(TrcTri[indx])
 
     return Rep
+
+
+#brouillon
 
 def Plus_Proche_Vois(A,Vois,Dist): # Pt de départ et Listes des Voisins ainsi que des Dist aux Voisins dans Arr --> Voisin le plus proche
     indx = 0
@@ -251,7 +258,7 @@ def Mat_Adj(Vois,Dist):
             Mat[i][Vois[i][j]]=Dist[i][j]
     return Mat
 
-#def Dijkstra_Mat_Adj():
+
 
 
 

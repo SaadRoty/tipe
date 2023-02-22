@@ -59,3 +59,5 @@ def Ecrire_Json(elmt,doc): # écrit elmt dans doc en écrasant tout
     with open(doc,"w") as f:
         json.dump(elmt,f)
 
+
+

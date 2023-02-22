@@ -15,6 +15,7 @@ import pygeoj
 import contextily as ctx
 import xyzservices.providers as xyz
 
+gestion des données : classe : DataFrame from panda
 
 #Enregistrer les données sous fichier json
 1)Trc_et_dist_Paris.json
@@ -67,7 +68,8 @@ T1=["Cartographie des voies de Paris par tronçons","Cartographie des arrondisse
     "Cartographie des voies du 1er arrondissement nécessitant une collecte des déchets"]
 T2=["frontière du 1er arrondissement de Paris"]
 
-# Creation des 3 Listes associées au voisinages des point dont l'indice corespond a celui de la liste contenant respectivement Les voisins des points, les distances avec ces voisins, les troncons associé pour aller à ce voisin
+# Creation des 3 Listes associées au voisinages des point dont l'indice correspond a celui de la liste contenant
+# respectivement Les voisins des points, les distances avec ces voisins, les troncons associé pour aller à ce voisin
 
 with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
    data= json.load(f)
@@ -79,6 +81,7 @@ with open("../assets/output/json/Dist_Trc_Tri_Arr.json") as f2:
 
 with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
    TrcTri=json.load(f3)
+
 print(Trouv_Vois(crd,NumPt,dist[0]))
 print('HAHA')
 
@@ -94,7 +97,7 @@ print('HAHA')
 print(Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0],crd,TrcTri[0]))
 print('HAHA')
 
-8)3L_Voisins_Dist_Trc_1erArr.json
+8)3L_Voisins_Dist_Trc_1erArr.json premiere version
     with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
        data= json.load(f)
 
@@ -106,7 +109,8 @@ print('HAHA')
     with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
         TrcTri=json.load(f3)
 
-    Li=[Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0] , Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[1] , Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0],crd,TrcTri[0])]
+    Li=[Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0])),
+        Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd,NumPt,dist[0]))[0],crd,TrcTri[0]), crd,NumPt]
     Ecrire_Json(Li,"../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json")
 
 #
@@ -114,3 +118,19 @@ with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
    data= json.load(f)
 
 Vois,Dist,TrcAss=data[0],data[1],data[2]
+
+9)3L_Voisins_Dist_Trc_1erArr.json avec equivalence numéro--> crd
+with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
+    data = json.load(f)
+
+crd, NumPt, EquivalentCrd = Renom_Pt_Extr_Trc(data[0])
+
+with open("../assets/output/json/Dist_Trc_Tri_Arr.json") as f2:
+    dist = json.load(f2)
+
+with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
+    TrcTri = json.load(f3)
+
+Li = [Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[0], EquivalentCrd, Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[1],
+      Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[0], crd, TrcTri[0])]
+Ecrire_Json(Li, "../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json")

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-
+# UPSTI
 def G_Rte(crd,titre): # 3L --> trace les Trc pour chaque 2L indépendament
 
     for trc in crd:
@@ -12,7 +12,7 @@ def G_Rte(crd,titre): # 3L --> trace les Trc pour chaque 2L indépendament
         for pt in trc:
             X.append(pt[0])
             Y.append(pt[1])
-        plt.plot(X,Y)
+        plt.plot(X,Y,'g')
 
     plt.title(titre)
     plt.xlabel("Longitude (°)")

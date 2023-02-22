@@ -36,27 +36,54 @@ from Fct_Graph import G_Aff_Poubelle
 #Algo_Dijkstra
 from Algo_Dijkstra import dijkstra
 
-
+#Algo_A_etoile
+from Algo_A_etoile import A_etoile
+from Algo_A_etoile import Chemin_final
+from Algo_A_etoile import trace_Chem
 
 #G_Rte(crd[11],"Cartographie des voies du 1er arrondissement")
 #G_Rte_Arr_Beau(crd,"Cartographie des voies de Paris triées par arrondissement selon la methode Est_In")
 
-#print(crd[0])
-#print(Renom_Pt_Extr_Trc(crd[0]))
-#print(len(Renom_Pt_Extr_Trc(crd[0])))
+"""with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
+    data = json.load(f)
 
 with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
-   data= json.load(f)
+    G = json.load(f)
 
-Vois,Dist,TrcAss=data[0],data[1],data[2]
+start=360
+end=2
 
-"""print(Vois)
-print('haha')
-print(Dist)
-print("haha")
-print(TrcAss)
-print(Hoho)"""
+for trc in data[0]:
+    X=[]
+    Y=[]
+    for pt in trc:
+        X.append(pt[0])
+        Y.append(pt[1])
+    plt.plot(X,Y,'g')
 
-print(Mat_Adj(Vois,Dist))
+plt.plot(G[1][start][0],G[1][start][1],"bo") ; plt.plot(G[1][end][0],G[1][end][1],"ro")
 
-print(dijkstra(len(Vois),Mat_Adj(Vois,Dist),0))
+plt.show()
+
+for trc in data[0]:
+    X=[]
+    Y=[]
+    for pt in trc:
+        X.append(pt[0])
+        Y.append(pt[1])
+    plt.plot(X,Y,'g')
+
+for trc in Chemin_final(A_etoile(start,end)[3]):
+    X=[]
+    Y=[]
+    for pt in trc:
+        X.append(pt[0])
+        Y.append(pt[1])
+    plt.plot(X,Y,'r')
+
+plt.plot(G[1][start][0],G[1][start][1],"bo")
+plt.plot(G[1][end][0],G[1][end][1],"r3")
+
+plt.show()"""
+
+trace_Chem(0,2)
