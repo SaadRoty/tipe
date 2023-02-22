@@ -26,6 +26,7 @@ from Fct_Exp import Dist_Chemin_Graph
 from Fct_Exp import Dijkstra
 from Fct_Exp import Mat_Adj
 
+
 #Fct_Graph
 from Fct_Graph import G_Rte
 from Fct_Graph import G_Rte_Carte
@@ -40,50 +41,22 @@ from Algo_Dijkstra import dijkstra
 from Algo_A_etoile import A_etoile
 from Algo_A_etoile import Chemin_final
 from Algo_A_etoile import trace_Chem
+from Algo_A_etoile import TestChmeSeul
+from Algo_A_etoile import PtNonConnectes
+
+from Algo_A_etoile import A_etoile2
+from Algo_A_etoile import Chemin_final2
+from Algo_A_etoile import trace_Chem2
 
 #G_Rte(crd[11],"Cartographie des voies du 1er arrondissement")
 #G_Rte_Arr_Beau(crd,"Cartographie des voies de Paris triées par arrondissement selon la methode Est_In")
 
-"""with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
-    data = json.load(f)
 
-with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
-    G = json.load(f)
 
-start=360
-end=2
 
-for trc in data[0]:
-    X=[]
-    Y=[]
-    for pt in trc:
-        X.append(pt[0])
-        Y.append(pt[1])
-    plt.plot(X,Y,'g')
+trace_Chem2(14,29)
 
-plt.plot(G[1][start][0],G[1][start][1],"bo") ; plt.plot(G[1][end][0],G[1][end][1],"ro")
 
-plt.show()
 
-for trc in data[0]:
-    X=[]
-    Y=[]
-    for pt in trc:
-        X.append(pt[0])
-        Y.append(pt[1])
-    plt.plot(X,Y,'g')
 
-for trc in Chemin_final(A_etoile(start,end)[3]):
-    X=[]
-    Y=[]
-    for pt in trc:
-        X.append(pt[0])
-        Y.append(pt[1])
-    plt.plot(X,Y,'r')
 
-plt.plot(G[1][start][0],G[1][start][1],"bo")
-plt.plot(G[1][end][0],G[1][end][1],"r3")
-
-plt.show()"""
-
-trace_Chem(0,2)

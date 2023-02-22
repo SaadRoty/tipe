@@ -134,3 +134,29 @@ with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
 Li = [Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[0], EquivalentCrd, Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[1],
       Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[0], crd, TrcTri[0])]
 Ecrire_Json(Li, "../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json")
+
+10) PtNonConnectés() -->les pt 30 et 31 de 3L_Voisins_Dist_Trc_1erArr ne sont pas connéctés avec le reste de l arrondissement on décide dont de les retirer
+
+on cree pour cela le dossier Arr1_V_Eq_D_Trc --> 465 pt différents maintenant
+
+with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
+    data = json.load(f)
+
+crd, NumPt, EquivalentCrd = Renom_Pt_Extr_Trc(data[0])
+
+with open("../assets/output/json/Dist_Trc_Tri_Arr.json") as f2:
+    dist = json.load(f2)
+
+with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f3:
+    TrcTri = json.load(f3)
+
+Li = [Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[0], EquivalentCrd, Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[1],
+      Trc_Associe_Vois(Div_Li_Vois(Trouv_Vois(crd, NumPt, dist[0]))[0], crd, TrcTri[0])]
+
+for i in range(4):
+    print(Li[i].pop(30))
+    print(Li[i].pop(30))
+
+Ecrire_Json(Li, "../assets/output/json/Arr1_V_Eq_D_Trc.json")
+
+11)

@@ -259,6 +259,7 @@ def Mat_Adj(Vois,Dist):
     return Mat
 
 
+# fin brouillon
 
 
 
