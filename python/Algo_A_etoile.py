@@ -81,8 +81,8 @@ def trace_Chem(start,end):
             Y.append(pt[1])
         plt.plot(X, Y, 'r')
 
-    plt.plot(G[1][start][0], G[1][start][1], "bo");
-    plt.plot(G[1][end][0], G[1][end][1], "rX")
+    plt.plot(G[1][start][0], G[1][start][1], "rX");
+    plt.plot(G[1][end][0], G[1][end][1], "bo")
 
     plt.show()
 
@@ -110,81 +110,32 @@ def PtNonConnectes(start):
             Rep.append(i)
     return Rep
 
-def A_etoile2(r,s): # r et s:  num des pt extrem depart et arrivé
+def Global_A_etoile(Chem):
+    Rep=[Chem[0]]
+    dist=0
+    for i in range(len(Chem)-1):
+        Dist,List=A_etoile(Chem[i],Chem[i+1])
+        Rep.extend(List[1:])
+        dist+=Dist
+    return dist,Rep
 
-    with open("../assets/output/json/Arr1_V_Eq_D_Trc.json") as f:
-        g = json.load(f)
-
-    def h(x): #
-        return np.sqrt((g[1][r][0]+g[1][x][0])**2 + (g[1][r][1]+g[1][x][1])**2)
-
-    def Extraire_Min (F,dist):
-        m=0
-        for j in range (1,len(F)):
-            if dist[F[j]]+h(F[j])<dist[F[m]]+h(F[m]):
-                m=j
-        x=F[m]; del F[m]
-        return x
-
-    def Relacher_E (x,y,g,p,dist,F):
-        Z=g[0][x].index(y)
-        if dist[y] > dist[x]+g[2][x][Z]:
-            dist[y] = dist[x]+g[2][x][Z]
-            p[y] = x
-            if y not in F:
-                F.append(y)
-
-    def Chem_A_etoile(p, start, end):
-        pt = end
-        rep = [pt]
-        while pt != start:
-            pt=p[pt]
-            rep.insert(0,pt)
-        return rep
-
-    p={x:'NIL' for x in range(len(g[0]))}
-    d={x:float('inf') for x in range(len(g[0]))}
-    d[r]=0 ; F=[r]
-
-    while F!=[]:
-        x=Extraire_Min(F,d)
-        if x==s:
-            return d[s],Chem_A_etoile(p,r,s)
-        for y in g[0][x]:
-            Relacher_E(x,y,g,p,d,F)
-    return False
-
-def Chemin_final2(chem):
-
-    with open("../assets/output/json/Arr1_V_Eq_D_Trc.json") as f:
-        g = json.load(f)
-
-    Vrai_Chem=[]
-    for i in range(len(chem)-1):
-        y=g[0][chem[i]].index(chem[i+1])
-        Vrai_Chem.append(g[3][chem[i]][y])
-    return Vrai_Chem
-
-def trace_Chem2(start,end):
+def Global_Trace_Chem(Chem):
 
     with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
         data = json.load(f)
 
-    with open("../assets/output/json/Arr1_V_Eq_D_Trc.json") as f:
+    with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
         G = json.load(f)
 
-    data[0].pop(30)
-    data[0].pop(30)
-    """for trc in data[0]:
+    for trc in data[0]:
         X = []
         Y = []
         for pt in trc:
             X.append(pt[0])
             Y.append(pt[1])
         plt.plot(X, Y, 'g')
-"""
 
-    for trc in Chemin_final2(A_etoile2(start, end)[1]):
+    for trc in Chemin_final(Global_A_etoile(Chem)[1]):
         X = []
         Y = []
         for pt in trc:
@@ -192,7 +143,11 @@ def trace_Chem2(start,end):
             Y.append(pt[1])
         plt.plot(X, Y, 'r')
 
-    plt.plot(G[1][start][0], G[1][start][1], "bo");
-    plt.plot(G[1][end][0], G[1][end][1], "rX")
+    plt.plot(G[1][Chem[0]][0], G[1][Chem[0]][1], "rX");
+    plt.plot(G[1][Chem[-1]][0], G[1][Chem[-1]][1], "bo")
+
+    for i in range(1,len(Chem)-1):
+        plt.plot(G[1][Chem[i]][0], G[1][Chem[i]][1], "ro")
 
     plt.show()
+

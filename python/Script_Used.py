@@ -159,4 +159,28 @@ for i in range(4):
 
 Ecrire_Json(Li, "../assets/output/json/Arr1_V_Eq_D_Trc.json")
 
-11)
+
+11) test rapidité
+
+n=10**8
+start=time.time()
+L=[0]*n
+mid=time.time()
+P=[0 for i in range(n)]
+end=time.time()
+print(mid-start,end-mid)
+"0.20249414443969727 ; 3.4870293140411377"
+
+12) test rapidité 2
+
+chrom=[1,11,111,2,22,222,3,33,333,4,44,5,55,6,66,7,77,8,88,9,99,10,20,40,50,60,70,80,90,100,110,120,130,140]
+
+Global_Trace_Chem(chrom)
+start=time.time()
+Global_A_etoile(chrom)
+mid=time.time()
+Fitness(chrom,6)
+end=time.time()
+
+print(mid-start,end-mid)
+"0.7406120300292969 ; 0.07483649253845215"
