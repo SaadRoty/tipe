@@ -47,25 +47,40 @@ from Algo_A_etoile import Global_A_etoile
 from Algo_A_etoile import Global_Trace_Chem
 
 #Algo_Gen
-from Algo_Gen import Fitness
+from Algo_Gen import Init_Li
+from Algo_Gen import Init_Pop_Random
+from Algo_Gen import Fitness_Exact
+from Algo_Gen import Fitness_Approximate
+from Algo_Gen import Init_Weight_Pop_Exact
+from Algo_Gen import Init_Weight_Pop_Approximate
+from Algo_Gen import Tri_Pop
 from Algo_Gen import Crussover_PMX
+from Algo_Gen import Merge_Pop_Offspring_Tri
+from Algo_Gen import Li_Prop_Rank
+from Algo_Gen import Roulette_Parents_Choice
+from Algo_Gen import Insertion_Mutation_Operator
+from Algo_Gen import Swap_Mutation_Operator
+from Algo_Gen import Reverse_Mutation_Operator
+from Algo_Gen import New_Pop
+from Algo_Gen import Mutation_Generation
 
-'''P1=[3,4,8,2,7,1,6,5]
-P2=[4,2,5,1,6,8,3,7]
-i=3
-j=5
-n=len(P1)
+n=10
+nPop=1000
+Li=Init_Li(n)
+Pop=Init_Pop_Random(Li,nPop)
+print(Pop[nPop-10:])
 
-print(Crussover_PMX(P1,P2,n,i,j))'''
+#W_Pop=Init_Weight_Pop_Exact(Pop,n)
 
+W_Pop=list(range(nPop-1,-1,-1))
+print(W_Pop[nPop-10:])
 
-chrom=[1,11,111,2,22,222,3,33,333,4,44,5,55,6,66,7,77,8,88,9,99,10,20,40,50,60,70,80,90,100,110,120,130,140]
+Pop,W_Pop=Tri_Pop(Pop,W_Pop)
+print(Pop[nPop-10:])
+print(W_Pop[nPop-10:])
 
-Global_Trace_Chem(chrom)
-start=time.time()
-Global_A_etoile(chrom)
-mid=time.time()
-Fitness(chrom,6)
-end=time.time()
+New_Pop(Pop,W_Pop,nPop)
+print('len', len(Pop))
+print(Pop[len(Pop)-10:])
+print(W_Pop[len(Pop)-10:])
 
-print(mid-start,end-mid)
