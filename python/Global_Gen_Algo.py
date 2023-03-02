@@ -3,70 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-'''n= lenlist'''
 
-def Init_Li(n):
-    L=[i for i in range(467)]
-    L.pop(30);L.pop(30)
-    Li=rd.choices(L,k= n)
-    return Li
-
-def Init_Pop_Random(Li,nPop):
-    L=Li.copy()
-    Pop=[Li]
-    i=1
-    while i < nPop:
-        rd.shuffle(L)
-        if L not in Pop:
-            Pop.append(L.copy())
-            i+=1
-    return Pop
 
 def Fitness_Exact(chrom,n):
     with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
         g = json.load(f)
 
-    dist = 0
-    def A_Etoile(r, s):
-
-        def h(x):  #
-            return np.sqrt((g[1][r][0] + g[1][x][0]) ** 2 + (g[1][r][1] + g[1][x][1]) ** 2)
-
-        def Extraire_Min(F, dist):
-            m = 0
-            for j in range(1, len(F)):
-                if dist[F[j]] + h(F[j]) < dist[F[m]] + h(F[m]):
-                    m = j
-            x = F[m];
-            del F[m]
-            return x
-
-        def Relacher_E(x, y, g, p, dist, F):
-            Z = g[0][x].index(y)
-            if dist[y] > dist[x] + g[2][x][Z]:
-                dist[y] = dist[x] + g[2][x][Z]
-                p[y] = x
-                if y not in F:
-                    F.append(y)
-        p = {x: 'NIL' for x in range(len(g[0]))}
-        d = {x: float('inf') for x in range(len(g[0]))}
-        d[r] = 0;
-        F = [r]
-
-        while F != []:
-            x = Extraire_Min(F, d)
-            if x == s:
-                return d[s]
-            for y in g[0][x]:
-                Relacher_E(x, y, g, p, d, F)
-        return False
-
-    for i in range(n-1):
-        dist+=A_Etoile(chrom[i],chrom[i+1])
-
-    return dist
-
-def Fitness_Exact_For_Global_Gen(chrom,n,g):
     dist = 0
     def A_Etoile(r, s):
 
@@ -161,12 +103,6 @@ def Init_Weight_Pop_Approximate(Pop,n,coef):
     W=[]
     for elmnt in Pop:
         W.append(Fitness_Approximate(elmnt,n,coef))
-    return W
-
-def Init_Weight_Pop_Exact_For_Global_Gen(Pop,n):
-    W=[]
-    for elmnt in Pop:
-        W.append(Fitness_Exact_For_Global_Gen(elmnt,n))
     return W
 
 def Tri_Pop(Pop,W_Pop):
@@ -268,80 +204,31 @@ def New_Pop(Pop,W_Pop,nPop): # on a combiné la Pop et W_Pop de la gen d'avant a
     del Pop[ind:]
     del W_Pop[ind:]
 
-def Mutation_Generation(Pop,W_Pop,nPop,n):
+def Mutation_Generation(Pop,nPop,n):
     Mut=[]
     for i in range(3*int(nPop/100),0,-3):
         j=randrange(0,nPop+i)
         Mut.append(Insertion_Mutation_Operator(Pop.pop(j),n))
-        W_Pop.pop(j)
 
         j = randrange(0,nPop+i-1)
         Mut.append(Swap_Mutation_Operator(Pop.pop(j),n))
-        W_Pop.pop(j)
 
         j = randrange(0,nPop+i-2)
         Mut.append(Reverse_Mutation_Operator(Pop.pop(j),n))
-        W_Pop.pop(j)
     return Mut
 
-def Create_Parents(Pop,Li_Prop):
-    P1 = Roulette_Parents_Choice(Pop, Li_Prop)
-    test = 0
-    while test == 0:
-        P2 = Roulette_Parents_Choice(Pop, Li_Prop)
-        if P1 != P2:
-            test = 1
-    return P1,P2
-
-def Create_i_j(n):
-    i = randrange(1,n-1)
-    test = 0
-    while test == 0:
-        j = randrange(1,n-1)
-        if i < j:
-            test = 1
-        elif j < i:
-            i,j = j,i
-            test = 1
-    return i,j
-
-## Final Algo
-
-def Global_Genetic_Algo(Li,n,nPop,nGen):
+def Global_Genetic_Algo(Li,n,nPop):
 
     with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
         g = json.load(f)
 
-    Pop = Init_Pop_Random(Li, nPop)
-    W_Pop = Init_Weight_Pop_Exact_For_Global_Gen(Pop,n)
-
-    Pop,W_Pop = Tri_Pop(Pop,W_Pop)
-
-    Li_Prop = Li_Prop_Rank(nPop)
-
-    for generation in range(nGen):
-
-        Off = []
-
-        for child in range(int(nPop/10)):
-
-            P1,P2 = Create_Parents(Pop,Li_Prop)
-            i,j = Create_i_j(n)
-
-            Off1,Off2 = Crussover_PMX(P1,P2,n,i,j)
-            Off.extend([Off1,Off2])
-
-        W_Off = Init_Weight_Pop_Exact_For_Global_Gen(Off,n)
-        Off,W_Off = Tri_Pop(Off,W_Off)
-
-        Pop,W_Pop = Merge_Pop_Offspring_Tri(Pop,W_Pop,Off,W_Off)
-
-        Mut = Mutation_Generation(Pop,W_Pop,nPop,n)
-        W_Mut = Init_Weight_Pop_Exact_For_Global_Gen(Mut,n)
-        Mut,W_Mut = Tri_Pop(Mut,W_Mut)
-
-        New_Pop(Pop,W_Pop,nPop)
-
-        Pop,W_Pop = Merge_Pop_Offspring_Tri(Pop,W_Pop,Mut,W_Mut)
-
-    return Pop[0],W_Pop[0]
+    def Init_Pop_Random():
+        L = Li.copy()
+        Pop = [Li]
+        i = 1
+        while i < nPop:
+            rd.shuffle(L)
+            if L not in Pop:
+                Pop.append(L.copy())
+                i += 1
+        return Pop

@@ -64,15 +64,30 @@ from Algo_Gen import Reverse_Mutation_Operator
 from Algo_Gen import New_Pop
 from Algo_Gen import Mutation_Generation
 
-n=10
+n=7
 nPop=1000
+coef=10
+
 Li=Init_Li(n)
 Pop=Init_Pop_Random(Li,nPop)
 print(Pop[nPop-10:])
 
-#W_Pop=Init_Weight_Pop_Exact(Pop,n)
+start=time.time()
+W_Pop=Init_Weight_Pop_Approximate(Pop,n,coef)
+end=time.time()
+print(W_Pop[nPop-10:])
+print('temps','=',end-start)
 
-W_Pop=list(range(nPop-1,-1,-1))
+start=time.time()
+W_Pop=Init_Weight_Pop_Exact(Pop,n)
+end=time.time()
+print(W_Pop[nPop-10:])
+print('temps','=',end-start)
+
+
+
+
+"""W_Pop=list(range(nPop-1,-1,-1))
 print(W_Pop[nPop-10:])
 
 Pop,W_Pop=Tri_Pop(Pop,W_Pop)
@@ -82,5 +97,5 @@ print(W_Pop[nPop-10:])
 New_Pop(Pop,W_Pop,nPop)
 print('len', len(Pop))
 print(Pop[len(Pop)-10:])
-print(W_Pop[len(Pop)-10:])
+print(W_Pop[len(Pop)-10:])"""
 
