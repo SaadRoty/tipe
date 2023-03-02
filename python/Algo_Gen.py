@@ -2,6 +2,8 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
+import time
+from collections import Counter
 
 '''n= lenlist'''
 
@@ -163,10 +165,10 @@ def Init_Weight_Pop_Approximate(Pop,n,coef):
         W.append(Fitness_Approximate(elmnt,n,coef))
     return W
 
-def Init_Weight_Pop_Exact_For_Global_Gen(Pop,n):
+def Init_Weight_Pop_Exact_For_Global_Gen(Pop,n,g):
     W=[]
     for elmnt in Pop:
-        W.append(Fitness_Exact_For_Global_Gen(elmnt,n))
+        W.append(Fitness_Exact_For_Global_Gen(elmnt,n,g))
     return W
 
 def Tri_Pop(Pop,W_Pop):
@@ -247,11 +249,13 @@ def Crussover_PMX(P1,P2,n,i,j):
 
 def Insertion_Mutation_Operator(chrom,n):
     chrom.insert(rd.randrange(0,n),chrom.pop(rd.randrange(0,n)))
+    return chrom
 
 def Swap_Mutation_Operator(chrom,n):
     a=rd.randrange(0,n)
     b=rd.randrange(0,n)
     chrom[a],chrom[b]=chrom[b],chrom[a]
+    return chrom
 
 def Reverse_Mutation_Operator(chrom,n):
     a = rd.randrange(0, n)
@@ -260,6 +264,7 @@ def Reverse_Mutation_Operator(chrom,n):
         chrom[a:b] = list(reversed(chrom[a:b]))
     else:
         chrom[b:a] = list(reversed(chrom[b:a]))
+    return chrom
 
 def New_Pop(Pop,W_Pop,nPop): # on a combiné la Pop et W_Pop de la gen d'avant avec les enfants créés hormis les mutés que l'on rajoutera apres
                    # on a créer 10% de nPop enfants, muté 3% de tout le monde et que l'on a sorti de la liste,
@@ -270,16 +275,18 @@ def New_Pop(Pop,W_Pop,nPop): # on a combiné la Pop et W_Pop de la gen d'avant a
 
 def Mutation_Generation(Pop,W_Pop,nPop,n):
     Mut=[]
-    for i in range(3*int(nPop/100),0,-3):
-        j=randrange(0,nPop+i)
+    for i in range(0,3*int(nPop/100),3):
+        rg=int(1.1*nPop)-i
+
+        j=rd.randrange(0,rg)
         Mut.append(Insertion_Mutation_Operator(Pop.pop(j),n))
         W_Pop.pop(j)
 
-        j = randrange(0,nPop+i-1)
+        j = rd.randrange(0,rg-1)
         Mut.append(Swap_Mutation_Operator(Pop.pop(j),n))
         W_Pop.pop(j)
 
-        j = randrange(0,nPop+i-2)
+        j = rd.randrange(0,rg-2)
         Mut.append(Reverse_Mutation_Operator(Pop.pop(j),n))
         W_Pop.pop(j)
     return Mut
@@ -294,10 +301,10 @@ def Create_Parents(Pop,Li_Prop):
     return P1,P2
 
 def Create_i_j(n):
-    i = randrange(1,n-1)
+    i = rd.randrange(1,n-1)
     test = 0
     while test == 0:
-        j = randrange(1,n-1)
+        j = rd.randrange(1,n-1)
         if i < j:
             test = 1
         elif j < i:
@@ -308,14 +315,19 @@ def Create_i_j(n):
 ## Final Algo
 
 def Global_Genetic_Algo(Li,n,nPop,nGen):
-
     with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
         g = json.load(f)
-
+    st=time.time()
     Pop = Init_Pop_Random(Li, nPop)
-    W_Pop = Init_Weight_Pop_Exact_For_Global_Gen(Pop,n)
+    W_Pop = Init_Weight_Pop_Exact_For_Global_Gen(Pop,n,g)
 
     Pop,W_Pop = Tri_Pop(Pop,W_Pop)
+    ed=time.time()
+
+    Min_Path,Min_Dist=Pop[0],W_Pop[0]
+
+    print(Min_Dist)
+    print('time1 =',ed-st)
 
     Li_Prop = Li_Prop_Rank(nPop)
 
@@ -331,17 +343,30 @@ def Global_Genetic_Algo(Li,n,nPop,nGen):
             Off1,Off2 = Crussover_PMX(P1,P2,n,i,j)
             Off.extend([Off1,Off2])
 
-        W_Off = Init_Weight_Pop_Exact_For_Global_Gen(Off,n)
+        W_Off = Init_Weight_Pop_Exact_For_Global_Gen(Off,n,g)
         Off,W_Off = Tri_Pop(Off,W_Off)
 
         Pop,W_Pop = Merge_Pop_Offspring_Tri(Pop,W_Pop,Off,W_Off)
 
+        if W_Pop[0]<Min_Dist:
+            Min_Path, Min_Dist = Pop[0], W_Pop[0]
+
         Mut = Mutation_Generation(Pop,W_Pop,nPop,n)
-        W_Mut = Init_Weight_Pop_Exact_For_Global_Gen(Mut,n)
+        W_Mut = Init_Weight_Pop_Exact_For_Global_Gen(Mut,n,g)
         Mut,W_Mut = Tri_Pop(Mut,W_Mut)
 
         New_Pop(Pop,W_Pop,nPop)
 
         Pop,W_Pop = Merge_Pop_Offspring_Tri(Pop,W_Pop,Mut,W_Mut)
 
-    return Pop[0],W_Pop[0]
+        if W_Pop[0] < Min_Dist:
+            Min_Path, Min_Dist = Pop[0], W_Pop[0]
+        print("Gen","=",generation+1,"result","=",Min_Path, Min_Dist)
+
+    J=Counter(Pop)
+    M=[]
+    for elmnt in J:
+        if J[elmnt] != 1:
+            M.append(J[elmnt])
+    print('M =',M)
+    return Min_Path, Min_Dist

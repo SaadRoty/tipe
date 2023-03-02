@@ -119,7 +119,7 @@ def Global_A_etoile(Chem):
         dist+=Dist
     return dist,Rep
 
-def Global_Trace_Chem(Chem):
+def Global_Trace_Chem(Chem,Nom,titre):
 
     with open("../assets/output/json/Trc_Paris_Tri_Meth_Est_In.json") as f:
         data = json.load(f)
@@ -127,6 +127,7 @@ def Global_Trace_Chem(Chem):
     with open("../assets/output/json/3L_Voisins_Dist_Trc_1erArr.json") as f:
         G = json.load(f)
 
+    plt.figure(Nom)
     for trc in data[0]:
         X = []
         Y = []
@@ -149,5 +150,5 @@ def Global_Trace_Chem(Chem):
     for i in range(1,len(Chem)-1):
         plt.plot(G[1][Chem[i]][0], G[1][Chem[i]][1], "ro")
 
-    plt.show()
+    plt.title(titre)
 
