@@ -363,10 +363,10 @@ def Global_Genetic_Algo(Li,n,nPop,nGen):
             Min_Path, Min_Dist = Pop[0], W_Pop[0]
         print("Gen","=",generation+1,"result","=",Min_Path, Min_Dist)
 
-    J=Counter(Pop)
+    '''J=Counter(Pop)
     M=[]
     for elmnt in J:
         if J[elmnt] != 1:
             M.append(J[elmnt])
-    print('M =',M)
+    print('M =',M)'''
     return Min_Path, Min_Dist
