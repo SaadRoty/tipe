@@ -52,6 +52,7 @@ from Algo_Gen import Init_Li
 from Algo_Gen import Init_Pop_Random
 from Algo_Gen import Fitness_Exact
 from Algo_Gen import Fitness_Approximate
+from Algo_Gen import Fitness_Exact_For_Global_Gen
 from Algo_Gen import Init_Weight_Pop_Exact
 from Algo_Gen import Init_Weight_Pop_Approximate
 from Algo_Gen import Tri_Pop
@@ -67,7 +68,13 @@ from Algo_Gen import Mutation_Generation
 from Algo_Gen import Create_Parents
 from Algo_Gen import Create_i_j
 from Algo_Gen import Global_Genetic_Algo
+
+from Algo_Gen import Fitness_Exact_For_Global_Gen2
+from Algo_Gen import Fitness_Exact_For_Global_Gen3
+from Algo_Gen import Fitness_Exact_For_Global_Gen4
+from Algo_Gen import Init_Weight_Pop_Exact_For_Global_Gen2
 '''
+
 n=7
 nPop=1000
 coef=10
@@ -101,10 +108,10 @@ New_Pop(Pop,W_Pop,nPop)
 print('len', len(Pop))
 print(Pop[len(Pop)-10:])
 print(W_Pop[len(Pop)-10:])"""
-'''
+
 n = 20
-nPop = 500
-nGen = 50
+nPop = 1000
+nGen = 250
 Li = Init_Li(n)
 
 dist=Fitness_Exact(Li,n)
@@ -117,8 +124,8 @@ end=time.time()
 print("time2 =",end-start)
 Global_Trace_Chem(Chem,"2eme",str(DIST))
 
-nPop=2000
-nGen=10
+nPop=5000
+nGen=50
 start=time.time()
 Chem,DIST=Global_Genetic_Algo(Li,n,nPop,nGen)
 end=time.time()
@@ -126,19 +133,10 @@ print("time3 =",end-start)
 Global_Trace_Chem(Chem,"3eme",str(DIST))
 
 plt.show()
-'''
-
-'''Pop=Init_Pop_Random(Li,nPop)
-W_Pop=Init_Weight_Pop_Exact(Pop,n)
-
-Pop,W_Pop=Tri_Pop(Pop,W_Pop)
-
-print(Pop)
-print(W_Pop)
-
-Mut=Mutation_Generation(Pop,W_Pop,nPop,n)
-print(Mut)'''
 
 
-Global_Trace_Chem([455, 341, 416, 330, 304, 256, 36, 453, 389, 128, 234, 226, 317, 101, 436, 20, 336, 242, 283, 177],'a','b')
-plt.show()
+
+
+#Global_Trace_Chem([455, 341, 416, 330, 304, 256, 36, 453, 389, 128, 234, 226, 317, 101, 436, 20, 336, 242, 283, 177],'a','b')
+#plt.show()
+

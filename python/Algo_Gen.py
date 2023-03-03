@@ -70,6 +70,88 @@ def Fitness_Exact(chrom,n):
 
 def Fitness_Exact_For_Global_Gen(chrom,n,g):
     dist = 0
+    def A_Etoile(r, s,e):
+
+        def h(x):  #
+            return np.sqrt((g[1][e][0] - g[1][x][0]) ** 2 + (g[1][e][1] - g[1][x][1]) ** 2)
+
+        def Extraire_Min(F, dist):
+            m = 0
+            for j in range(1, len(F)):
+                if dist[F[j]] + h(F[j]) < dist[F[m]] + h(F[m]):
+                    m = j
+            x = F[m];
+            del F[m]
+            return x
+
+        def Relacher_E(x, y, g, p, dist, F):
+            Z = g[0][x].index(y)
+            if dist[y] > dist[x] + g[2][x][Z]:
+                dist[y] = dist[x] + g[2][x][Z]
+                p[y] = x
+                if y not in F:
+                    F.append(y)
+        p = {x: 'NIL' for x in range(len(g[0]))}
+        d = {x: float('inf') for x in range(len(g[0]))}
+        d[r] = 0;
+        F = [r]
+
+        while F != []:
+            x = Extraire_Min(F, d)
+            if x == s:
+                return d[s]
+            for y in g[0][x]:
+                Relacher_E(x, y, g, p, d, F)
+        return False
+
+    for i in range(n-1):
+        dist+=A_Etoile(chrom[i],chrom[i+1],chrom[-1])
+
+    return dist
+
+def Fitness_Exact_For_Global_Gen2(chrom,n,g,coeff):
+    dist = 0
+    def A_Etoile(r,s,e):
+
+        def h(x):  #
+            return coeff*np.sqrt((g[1][e][0] - g[1][x][0]) ** 2 + (g[1][e][1] - g[1][x][1]) ** 2)
+
+        def Extraire_Min(F, dist):
+            m = 0
+            for j in range(1, len(F)):
+                if dist[F[j]] + h(F[j]) < dist[F[m]] + h(F[m]):
+                    m = j
+            x = F[m];
+            del F[m]
+            return x
+
+        def Relacher_E(x, y, g, p, dist, F):
+            Z = g[0][x].index(y)
+            if dist[y] > dist[x] + g[2][x][Z]:
+                dist[y] = dist[x] + g[2][x][Z]
+                p[y] = x
+                if y not in F:
+                    F.append(y)
+        p = {x: 'NIL' for x in range(len(g[0]))}
+        d = {x: float('inf') for x in range(len(g[0]))}
+        d[r] = 0;
+        F = [r]
+
+        while F != []:
+            x = Extraire_Min(F, d)
+            if x == s:
+                return d[s]
+            for y in g[0][x]:
+                Relacher_E(x, y, g, p, d, F)
+        return False
+
+    for i in range(n-1):
+        dist+=A_Etoile(chrom[i],chrom[i+1],chrom[-1])
+
+    return dist
+
+def Fitness_Exact_For_Global_Gen3(chrom,n,g):
+    dist = 0
     def A_Etoile(r, s):
 
         def h(x):  #
@@ -106,6 +188,47 @@ def Fitness_Exact_For_Global_Gen(chrom,n,g):
 
     for i in range(n-1):
         dist+=A_Etoile(chrom[i],chrom[i+1])
+
+    return dist
+
+def Fitness_Exact_For_Global_Gen4(chrom,n,g):
+    dist = 0
+    def A_Etoile(r, s,e):
+
+        def h(x):  #
+            return 0
+
+        def Extraire_Min(F, dist):
+            m = 0
+            for j in range(1, len(F)):
+                if dist[F[j]] + h(F[j]) < dist[F[m]] + h(F[m]):
+                    m = j
+            x = F[m];
+            del F[m]
+            return x
+
+        def Relacher_E(x, y, g, p, dist, F):
+            Z = g[0][x].index(y)
+            if dist[y] > dist[x] + g[2][x][Z]:
+                dist[y] = dist[x] + g[2][x][Z]
+                p[y] = x
+                if y not in F:
+                    F.append(y)
+        p = {x: 'NIL' for x in range(len(g[0]))}
+        d = {x: float('inf') for x in range(len(g[0]))}
+        d[r] = 0;
+        F = [r]
+
+        while F != []:
+            x = Extraire_Min(F, d)
+            if x == s:
+                return d[s]
+            for y in g[0][x]:
+                Relacher_E(x, y, g, p, d, F)
+        return False
+
+    for i in range(n-1):
+        dist+=A_Etoile(chrom[i],chrom[i+1],chrom[-1])
 
     return dist
 
@@ -168,7 +291,13 @@ def Init_Weight_Pop_Approximate(Pop,n,coef):
 def Init_Weight_Pop_Exact_For_Global_Gen(Pop,n,g):
     W=[]
     for elmnt in Pop:
-        W.append(Fitness_Exact_For_Global_Gen(elmnt,n,g))
+        W.append(Fitness_Exact_For_Global_Gen4(elmnt,n,g))
+    return W
+
+def Init_Weight_Pop_Exact_For_Global_Gen2(Pop,n,g):
+    W=[]
+    for elmnt in Pop:
+        W.append(Fitness_Exact_For_Global_Gen2(elmnt,n,g))
     return W
 
 def Tri_Pop(Pop,W_Pop):
